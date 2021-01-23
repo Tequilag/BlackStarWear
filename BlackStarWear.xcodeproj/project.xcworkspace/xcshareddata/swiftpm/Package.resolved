@@ -1,0 +1,106 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
+        "state": {
+          "branch": null,
+          "revision": "eaf6e622dd41b07b251d8f01752eab31bc811493",
+          "version": "5.4.1"
+        }
+      },
+      {
+        "package": "Moya",
+        "repositoryURL": "https://github.com/Moya/Moya.git",
+        "state": {
+          "branch": null,
+          "revision": "b3e5a233e0d85fd4d69f561c80988590859c7dee",
+          "version": "14.0.0"
+        }
+      },
+      {
+        "package": "PromiseKit",
+        "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
+        "state": {
+          "branch": null,
+          "revision": "aea48ea1855f5d82e2dffa6027afce3aab8f3dd7",
+          "version": "6.13.3"
+        }
+      },
+      {
+        "package": "ReactiveSwift",
+        "repositoryURL": "https://github.com/Moya/ReactiveSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "f195d82bb30e412e70446e2b4a77e1b514099e88",
+          "version": "6.1.0"
+        }
+      },
+      {
+        "package": "Realm",
+        "repositoryURL": "https://github.com/realm/realm-cocoa.git",
+        "state": {
+          "branch": null,
+          "revision": "4274b9c8ba717d7a81c953c34b715d5f587fa92f",
+          "version": "10.5.1"
+        }
+      },
+      {
+        "package": "RealmDatabase",
+        "repositoryURL": "https://github.com/realm/realm-core",
+        "state": {
+          "branch": null,
+          "revision": "8af0f8d609491986b49f2c986e771d9dc445664d",
+          "version": "10.3.3"
+        }
+      },
+      {
+        "package": "RxDataSources",
+        "repositoryURL": "https://github.com/RxSwiftCommunity/RxDataSources.git",
+        "state": {
+          "branch": null,
+          "revision": "a18cee01c9ee55f04d0c7eb15c77a96c3648c88e",
+          "version": "4.0.1"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
+        }
+      },
+      {
+        "package": "SDWebImage",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImage.git",
+        "state": {
+          "branch": null,
+          "revision": "564d238f8814c4a82502336fd80b28a9d321ff47",
+          "version": "5.10.2"
+        }
+      },
+      {
+        "package": "TinyConstraints",
+        "repositoryURL": "https://github.com/roberthein/TinyConstraints.git",
+        "state": {
+          "branch": null,
+          "revision": "f413ea53b886de81b925eeb37a14538fe6ae4912",
+          "version": "4.0.1"
+        }
+      },
+      {
+        "package": "UltraDrawerView",
+        "repositoryURL": "https://github.com/super-ultra/UltraDrawerView",
+        "state": {
+          "branch": null,
+          "revision": "b0ef718cada5ffc85be28b726d9aa88e54a62746",
+          "version": "0.5.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
