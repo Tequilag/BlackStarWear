@@ -39,26 +39,6 @@ extension AppCoordinator {
     func start() {
         
         window?.rootViewController = navigationController
-        let attributes = [NSAttributedString.Key.font: AppDesign.Font.bold.with(size: 128),
-                          NSAttributedString.Key.foregroundColor: UIColor.white]
-        
-        let totalSize = CGSize(width: 1024, height: 1024)
-        let numberString: NSString = """
-BLACK
-  STAR
- WEAR
-""" as NSString
-//        let numberString: NSString = "BSW" as NSString
-        let numberStringSize = numberString.size(withAttributes: attributes)
-        let newIcon = UIGraphicsImageRenderer(size: totalSize).image { context in
-            
-            let circle = UIColor.black.image(size: totalSize, cornerRadius: 0)
-            circle.draw(in: CGRect(origin: .zero, size: circle.size))
-            let numberPoint = CGPoint(
-                x: (totalSize.width - numberStringSize.width) / 2.0,
-                y: (totalSize.height - numberStringSize.height) / 2.0)
-            numberString.draw(in: CGRect(origin: numberPoint, size: numberStringSize), withAttributes: attributes)
-        }
         let categoriesCoordinator = CategoriesCoordinator(navigationController: navigationController)
         categoriesCoordinator.start()
     }
