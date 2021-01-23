@@ -22,6 +22,7 @@ class CategoriesViewModel {
     var onBackButtonDidTap: (() -> Void)?
     var onModuleDeinit: (() -> Void)?
     var onCategoryDidSelect: ((String) -> Void)?
+    var onSubcategoryDidSelect: ((String) -> Void)?
     
     // MARK: - Private properties
     
@@ -100,7 +101,16 @@ private extension CategoriesViewModel {
         
         input.modelDidSelectSubject.subscribe(onNext: { [unowned self] model in
             
-            self.onCategoryDidSelect?(model.id)
+            guard let category = self.output.categories.value.first(where: { $0.id == model.id }) else { return }
+            
+            if category.subcategories.isEmpty {
+                
+                self.onSubcategoryDidSelect?(model.id)
+            }
+            else {
+                
+                self.onCategoryDidSelect?(model.id)
+            }
         }).disposed(by: disposeBag)
     }
     

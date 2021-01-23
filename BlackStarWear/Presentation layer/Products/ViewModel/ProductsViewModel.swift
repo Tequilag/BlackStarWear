@@ -107,6 +107,7 @@ private extension ProductsViewModel {
         input.viewDidLoadSubject.subscribe(onNext: { [unowned self] in
             
             self.loadCachedProducts()
+            self.loadCachedCategory()
             self.reloadProducts()
         }).disposed(by: disposeBag)
         
@@ -121,7 +122,7 @@ private extension ProductsViewModel {
         }).disposed(by: disposeBag)
     }
     
-    func loadCachedProducts() {
+    func loadCachedCategory() {
         
         if let category = try? defaultRepository
             .fetch(SubcategoryManageable.self, NSPredicate(format: "id=%@", initial.categoryId))
@@ -129,6 +130,15 @@ private extension ProductsViewModel {
             
             output.title.accept(category.name)
         }
+        else if let category = try? defaultRepository
+            .fetch(CategoryManageable.self, NSPredicate(format: "id=%@", initial.categoryId))
+            .map(to: CategoryProducer.self).first {
+        
+            output.title.accept(category.name)
+        }
+    }
+    
+    func loadCachedProducts() {
         
         guard let products = try? defaultRepository
                 .fetch(ProductManageable.self,

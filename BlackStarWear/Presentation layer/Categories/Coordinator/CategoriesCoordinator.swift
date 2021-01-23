@@ -29,6 +29,13 @@ class CategoriesCoordinator: BaseCoordinator {
                                                        navigationController: self.navigationController)
             coordinator.start()
         }
+        output.onSubcategoryDidSelect = { [weak self] categoryId in
+            
+            guard let self = self else { return }
+            let coordinator = ProductsCoordinator(categoryId: categoryId,
+                                                  navigationController: self.navigationController)
+            coordinator.start()
+        }
         
         navigationController.pushViewController(controller, animated: true)
         self.controller = controller
