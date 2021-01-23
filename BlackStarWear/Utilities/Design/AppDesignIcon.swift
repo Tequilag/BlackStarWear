@@ -53,5 +53,43 @@ extension AppDesign {
             UIGraphicsEndImageContext()
             return image!.withRenderingMode(.alwaysTemplate)
         }
+        
+        func icon(number: Int,
+                  size: CGSize,
+                  iconColor: UIColor = .white,
+                  numberBackgroundColor: UIColor = .red) -> UIImage {
+        
+            let mainIcon = self.with(size: size).changeColor(with: iconColor)
+            
+            if number > 0 {
+                
+                let attributes = [NSAttributedString.Key.font: AppDesign.Font.bold.with(size: 9),
+                                  NSAttributedString.Key.foregroundColor: UIColor.white]
+                
+                let totalSize = CGSize(width: size.width + 3, height: size.height + 6)
+                let numberIconSize = CGSize(width: 14, height: 14)
+                let circlePoint = CGPoint(x: totalSize.width - numberIconSize.width, y: 0)
+                let numberString: NSString = "\(number)" as NSString
+                let numberStringSize = numberString.size(withAttributes: attributes)
+                let newIcon = UIGraphicsImageRenderer(size: totalSize).image { context in
+                    
+                    mainIcon.draw(in: CGRect(origin: CGPoint(x: 0, y: totalSize.height - mainIcon.size.height),
+                                             size: mainIcon.size))
+                    let coloredCircle = numberBackgroundColor.image(size: numberIconSize,
+                                                                    cornerRadius: numberIconSize.height / 2.0)
+                    coloredCircle.draw(in: CGRect(origin: circlePoint, size: coloredCircle.size))
+                    let numberPoint = CGPoint(
+                        x: circlePoint.x - (numberStringSize.width / 2.0) + numberIconSize.width / 2.0,
+                        y: circlePoint.y - (numberStringSize.height / 2.0) + numberIconSize.height / 2.0)
+                    numberString.draw(in: CGRect(origin: numberPoint, size: numberStringSize),
+                                      withAttributes: attributes)
+                }
+                return newIcon
+            }
+            
+            return mainIcon
+        }
+        
     }
+    
 }

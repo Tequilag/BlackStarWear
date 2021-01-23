@@ -39,6 +39,8 @@ class ProductCoordinator: BaseCoordinator {
         
         guard var output = controller.resolve(input: ProductCoordinatorOutput.self) else { return }
         
+        AppCoordinator.shared.registerCoordinator(self)
+        
         output.onFinish = { [weak self] in
             
             guard let self = self else { return }
@@ -54,12 +56,14 @@ class ProductCoordinator: BaseCoordinator {
             self.navigationController.popViewController(animated: true)
         }
         
-        output.onCartButtonTap = {
+        output.onCartButtonTap = { [weak self] in
             
+            guard let self = self else { return }
             let coordinator = CartCoordinator(navigationController: self.navigationController)
-            coordinator.onFinish = { [weak self] in
+            coordinator.onFinish = {
                 
-                self?.navigationController.popToRootViewController(animated: true)
+                self.navigationController.popToRootViewController(animated: true)
+                AppCoordinator.shared.removeCoordinator(self)
             }
             coordinator.start()
         }

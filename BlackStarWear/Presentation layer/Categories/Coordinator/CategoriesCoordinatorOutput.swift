@@ -14,4 +14,5 @@ protocol CategoriesCoordinatorOutput {
     var onModuleDeinit: (() -> Void)? { get set }
     var onCategoryDidSelect: ((String) -> Void)? { get set }
     var onSubcategoryDidSelect: ((String) -> Void)? { get set }
+    var onCartButtonTap: (() -> Void)? { get set }
 }

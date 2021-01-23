@@ -39,20 +39,38 @@ class ProductsCoordinator: BaseCoordinator {
         
         guard var output = controller.resolve(input: ProductsCoordinatorOutput.self) else { return }
         
+        AppCoordinator.shared.registerCoordinator(self)
+        
         output.onFinish = { [weak self] in
             
-            self?.onFinish?()
-            self?.navigationController.popViewController(animated: true)
+            guard let self = self else { return }
+            self.onFinish?()
+            self.navigationController.popViewController(animated: true)
+            AppCoordinator.shared.removeCoordinator(self)
         }
         
-        output.onBackButtonDidTap = {
+        output.onBackButtonDidTap = { [weak self] in
             
+            guard let self = self else { return }
             self.navigationController.popViewController(animated: true)
+            AppCoordinator.shared.removeCoordinator(self)
         }
         
         output.onProductDidSelect = { productId in
             
             let coordinator = ProductCoordinator(productId: productId, navigationController: self.navigationController)
+            coordinator.start()
+        }
+        
+        output.onCartButtonTap = { [weak self] in
+            
+            guard let self = self else { return }
+            let coordinator = CartCoordinator(navigationController: self.navigationController)
+            coordinator.onFinish = {
+                
+                self.navigationController.popToRootViewController(animated: true)
+                AppCoordinator.shared.removeCoordinator(self)
+            }
             coordinator.start()
         }
         

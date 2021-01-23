@@ -23,6 +23,7 @@ class CategoriesViewModel {
     var onModuleDeinit: (() -> Void)?
     var onCategoryDidSelect: ((String) -> Void)?
     var onSubcategoryDidSelect: ((String) -> Void)?
+    var onCartButtonTap: (() -> Void)?
     
     // MARK: - Private properties
     
@@ -30,6 +31,7 @@ class CategoriesViewModel {
     private let subjects = Subjects()
     private let defaultRepository = RepositoryBuilder.default.build()
     private let categoriesService = CategoriesService()
+    private var repositoryToken: RepositoryNotificationToken<CartItemManageable>?
     
     // MARK: - Lifecycle
     
@@ -43,6 +45,8 @@ class CategoriesViewModel {
     
     deinit {
     
+        repositoryToken?.controller.stopWatch()
+        repositoryToken = nil
         onModuleDeinit?()
     }
     
@@ -61,11 +65,13 @@ extension CategoriesViewModel {
         let viewDidLoadSubject = PublishSubject<Void>()
         let refreshControlDidFireSubject = PublishSubject<Void>()
         let modelDidSelectSubject = PublishSubject<CategoriesCellData>()
+        let cartTap = BehaviorSubject<Void>(value: ())
     }
     
     struct Output {
         
         let categories = BehaviorRelay<[Category]>(value: [])
+        let cartItemsCount = BehaviorRelay<Int>(value: 0)
         let isLoading: Driver<Bool>
         let error: Driver<Error>
     }
@@ -90,6 +96,7 @@ private extension CategoriesViewModel {
         
         input.viewDidLoadSubject.subscribe(onNext: { [unowned self] in
             
+            self.addCartItemsWathcher()
             self.loadCachedCategories()
             self.reloadCategories()
         }).disposed(by: disposeBag)
@@ -111,6 +118,11 @@ private extension CategoriesViewModel {
                 
                 self.onCategoryDidSelect?(model.id)
             }
+        }).disposed(by: disposeBag)
+        
+        input.cartTap.subscribe(onNext: { [unowned self] in
+            
+            self.onCartButtonTap?()
         }).disposed(by: disposeBag)
     }
     
@@ -138,6 +150,22 @@ private extension CategoriesViewModel {
             
             self.subjects.error.onNext(error)
         }
+    }
+    
+    func addCartItemsWathcher() {
+        
+        guard repositoryToken == nil else { return }
+        repositoryToken = try? defaultRepository.watch(for: CartItemManageable.self)
+        repositoryToken?.observable.update(execute: { [weak self] notification in
+            
+            guard let self = self else { return }
+            switch notification {
+            case .initial(let objects):
+                self.output.cartItemsCount.accept(objects.count)
+            case .update(let objects, _, _, _):
+                self.output.cartItemsCount.accept(objects.count)
+            }
+        })
     }
     
 }

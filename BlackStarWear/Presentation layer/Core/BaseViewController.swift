@@ -73,7 +73,7 @@ class BaseViewController: UIViewController, NavigationBarDataSource {
         var navigationBarColor = AppDesign.Color.navigationBar.ui
         var barTintColor = AppDesign.Color.navigationBarTint.ui
         var tintColor = AppDesign.Color.navigationTint.ui
-        var separatorColor = AppDesign.Color.navigationBarTint.ui
+        var separatorColor = AppDesign.Color.separator.ui
         var barTitleColor = AppDesign.Color.navigationBarTitle.ui
         var barTitleFont = AppDesign.Font.bold.with(size: 16)
     }

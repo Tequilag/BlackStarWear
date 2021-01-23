@@ -13,4 +13,5 @@ protocol SubcategoriesCoordinatorOutput {
     var onBackButtonDidTap: (() -> Void)? { get set }
     var onModuleDeinit: (() -> Void)? { get set }
     var onSubcategoryDidSelect: ((String) -> Void)? { get set }
+    var onCartButtonTap: (() -> Void)? { get set }
 }

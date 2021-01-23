@@ -67,6 +67,12 @@ class ProductViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        var style = navigationBarStyle
+        style.barStyle = .transparent
+        style.separatorColor = .clear
+        style.navigationBarColor = .clear
+        style.tintColor = .white
+        navigationBarStyle = style
         titleLabel.isHidden = true
         collectionViewTransparentView.backgroundColor = .clear
         navigationBackgroundView.backgroundColor = .clear
@@ -86,7 +92,9 @@ class ProductViewController: BaseViewController {
     override func rightItems(for navigationBar: UINavigationBar) -> [UIBarButtonItem]? {
         
         let button = BSWButton()
-        button.setImage(buildCartIcon(with: viewModel.output.cartItemsCount.value), for: .normal)
+        button.setImage(AppDesign.Icon.cart.icon(number: viewModel.output.cartItemsCount.value,
+                                                 size: CGSize(width: 20, height: 20)),
+                        for: .normal)
         button.rx.tap.subscribe(onNext: { [unowned self] in
 
             self.viewModel.input.cartTap.onNext(())
@@ -257,12 +265,6 @@ private extension ProductViewController {
     func setupView() {
         
         view.backgroundColor = .white
-        var style = navigationBarStyle
-        style.barStyle = .transparent
-        style.separatorColor = .clear
-        style.navigationBarColor = .clear
-        style.tintColor = .white
-        navigationBarStyle = style
         
         view.addSubview(navigationBackgroundView)
         navigationBackgroundView.edgesToSuperview(excluding: [.bottom])
@@ -383,7 +385,6 @@ private extension ProductViewController {
         
         scrollViewTopConstraint?.constant = -view.safeAreaInsets.top
         navigationBackgroundViewHeightConstraint?.constant = view.safeAreaInsets.top
-        navigationController?.navigationBar.clipsToBounds = true
     }
     
     func updateUIOnContentViewMove() {
@@ -457,37 +458,6 @@ private extension ProductViewController {
                 drawerView.removeFromSuperview()
             })
             .disposed(by: drawerView.disposeBag)
-    }
-    
-    func buildCartIcon(with number: Int) -> UIImage? {
-        
-        let cartIcon = AppDesign.Icon.cart.with(size: CGSize(width: 20, height: 20)).changeColor(with: .white)
-        
-        if number > 0 {
-            
-            let attributes = [NSAttributedString.Key.font: AppDesign.Font.bold.with(size: 9),
-                              NSAttributedString.Key.foregroundColor: UIColor.white]
-            
-            let totalSize = CGSize(width: 23, height: 26)
-            let numberIconSize = CGSize(width: 14, height: 14)
-            let circlePoint = CGPoint(x: totalSize.width - numberIconSize.width, y: 0)
-            let numberString: NSString = "\(number)" as NSString
-            let numberStringSize = numberString.size(withAttributes: attributes)
-            let newIcon = UIGraphicsImageRenderer(size: totalSize).image { context in
-                
-                cartIcon.draw(in: CGRect(origin: CGPoint(x: 0, y: totalSize.height - cartIcon.size.height),
-                                         size: cartIcon.size))
-                let redCircle = UIColor.red.image(size: numberIconSize, cornerRadius: numberIconSize.height / 2.0)
-                redCircle.draw(in: CGRect(origin: circlePoint, size: redCircle.size))
-                let numberPoint = CGPoint(
-                    x: circlePoint.x - (numberStringSize.width / 2.0) + numberIconSize.width / 2.0,
-                    y: circlePoint.y - (numberStringSize.height / 2.0) + numberIconSize.height / 2.0)
-                numberString.draw(in: CGRect(origin: numberPoint, size: numberStringSize), withAttributes: attributes)
-            }
-            return newIcon
-        }
-        
-        return cartIcon
     }
     
     // MARK: - Handlers

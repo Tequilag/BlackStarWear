@@ -37,6 +37,18 @@ class CategoriesCoordinator: BaseCoordinator {
             coordinator.start()
         }
         
+        output.onCartButtonTap = { [weak self] in
+            
+            guard let self = self else { return }
+            let coordinator = CartCoordinator(navigationController: self.navigationController)
+            coordinator.onFinish = {
+                
+                self.navigationController.popToRootViewController(animated: true)
+                AppCoordinator.shared.removeCoordinator(self)
+            }
+            coordinator.start()
+        }
+        
         navigationController.pushViewController(controller, animated: true)
         self.controller = controller
     }

@@ -180,7 +180,8 @@ extension BaseNavigationViewController {
         setNavigationBarHidden(barDataSource.hidesNavigationBar, animated: true)
         interactivePopGestureRecognizer?.isEnabled = barDataSource.isInteractivePopGestureRecognizerEnabled
         interactivePopGestureRecognizer?.delegate = barDataSource.isInteractivePopGestureRecognizerEnabled ? self : nil
-        navigationBar.prefersLargeTitles = barDataSource.prefersLargeTitles
+        navigationBar.prefersLargeTitles = true
+        last.navigationItem.largeTitleDisplayMode = barDataSource.prefersLargeTitles ? .always : .never
         
         guard !barDataSource.hidesNavigationBar else { return }
         
@@ -188,6 +189,7 @@ extension BaseNavigationViewController {
                                                                               size: CGSize(width: 1, height: 1))))
         let rightOffsetItem = UIBarButtonItem(customView: UIView(frame: CGRect(origin: .zero,
                                                                                size: CGSize(width: 1, height: 1))))
+        
         last.navigationItem.title = barDataSource.navigationBarTitle
         last.navigationItem.titleView = barDataSource.titleView(for: navigationBar)
         last.navigationItem.leftBarButtonItems = [leftOffsetItem] + (barDataSource.leftItems(for: navigationBar) ?? [])

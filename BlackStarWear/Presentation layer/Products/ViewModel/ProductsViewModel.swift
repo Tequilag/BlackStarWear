@@ -22,6 +22,7 @@ class ProductsViewModel {
     var onBackButtonDidTap: (() -> Void)?
     var onModuleDeinit: (() -> Void)?
     var onProductDidSelect: ((String) -> Void)?
+    var onCartButtonTap: (() -> Void)?
     
     // MARK: - Private properties
     
@@ -30,6 +31,7 @@ class ProductsViewModel {
     private let defaultRepository = RepositoryBuilder.default.build()
     private let productsService = ProductsService()
     private var initial: Initial!
+    private var repositoryToken: RepositoryNotificationToken<CartItemManageable>?
     
     // MARK: - Lifecycle
     
@@ -43,6 +45,8 @@ class ProductsViewModel {
     
     deinit {
     
+        repositoryToken?.controller.stopWatch()
+        repositoryToken = nil
         onModuleDeinit?()
     }
     
@@ -71,6 +75,7 @@ extension ProductsViewModel {
         let viewDidLoadSubject = PublishSubject<Void>()
         let refreshControlDidFireSubject = PublishSubject<Void>()
         let modelDidSelectSubject = PublishSubject<ProductsCellData>()
+        let cartTap = BehaviorSubject<Void>(value: ())
     }
     
     struct Output {
@@ -79,6 +84,7 @@ extension ProductsViewModel {
         let products = BehaviorRelay<[Product]>(value: [])
         let isLoading: Driver<Bool>
         let error: Driver<Error>
+        let cartItemsCount = BehaviorRelay<Int>(value: 0)
     }
     
     struct Initial {
@@ -106,6 +112,7 @@ private extension ProductsViewModel {
         
         input.viewDidLoadSubject.subscribe(onNext: { [unowned self] in
             
+            self.addCartItemsWathcher()
             self.loadCachedProducts()
             self.loadCachedCategory()
             self.reloadProducts()
@@ -119,6 +126,11 @@ private extension ProductsViewModel {
         input.modelDidSelectSubject.subscribe(onNext: { [unowned self] model in
             
             self.onProductDidSelect?(model.id)
+        }).disposed(by: disposeBag)
+        
+        input.cartTap.subscribe(onNext: { [unowned self] in
+            
+            self.onCartButtonTap?()
         }).disposed(by: disposeBag)
     }
     
@@ -164,6 +176,22 @@ private extension ProductsViewModel {
             
             self.subjects.error.onNext(error)
         }
+    }
+    
+    func addCartItemsWathcher() {
+        
+        guard repositoryToken == nil else { return }
+        repositoryToken = try? defaultRepository.watch(for: CartItemManageable.self)
+        repositoryToken?.observable.update(execute: { [weak self] notification in
+            
+            guard let self = self else { return }
+            switch notification {
+            case .initial(let objects):
+                self.output.cartItemsCount.accept(objects.count)
+            case .update(let objects, _, _, _):
+                self.output.cartItemsCount.accept(objects.count)
+            }
+        })
     }
     
 }

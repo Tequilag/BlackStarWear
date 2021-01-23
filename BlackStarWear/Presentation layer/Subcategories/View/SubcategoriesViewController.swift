@@ -53,6 +53,20 @@ class SubcategoriesViewController: BaseViewController {
         viewModel.onBackButtonDidTap?()
     }
     
+    override func rightItems(for navigationBar: UINavigationBar) -> [UIBarButtonItem]? {
+        
+        let button = BSWButton()
+        button.setImage(AppDesign.Icon.cart.icon(number: viewModel.output.cartItemsCount.value,
+                                                 size: CGSize(width: 20, height: 20),
+                                                 iconColor: AppDesign.Color.navigationBarTint.ui),
+                        for: .normal)
+        button.rx.tap.subscribe(onNext: { [unowned self] in
+
+            self.viewModel.input.cartTap.onNext(())
+        }).disposed(by: disposeBag)
+        return [UIBarButtonItem(customView: button)]
+    }
+    
 }
 
 // MARK: - ModuleInputConvertible
@@ -101,6 +115,11 @@ private extension SubcategoriesViewController {
             .disposed(by: disposeBag)
         
         viewModel.output.categoryNameSubject.subscribe(onNext: { [unowned self] _ in
+            
+            self.reloadNavigationBar()
+        }).disposed(by: disposeBag)
+        
+        viewModel.output.cartItemsCount.subscribe(onNext: { [unowned self] _ in
             
             self.reloadNavigationBar()
         }).disposed(by: disposeBag)
